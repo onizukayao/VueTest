@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./lib/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Vue.component把组件模板对象，注册为一个全局的Vue组件 -->
+        <mylogin></mylogin>
+        <!-- 通过私有化组件调用组件模板赋值 -->
+        <mylogin2></mylogin2>
+        <!-- 通过简写方式，私有化组件调用组件模板 -->
+        <login></login>
+        <test></test>
+    </div>
+
+    <!-- 模板 -->
+    <template id="temp">
+        <div>
+            <h1>This s comp1 ---{{msg}}</h1>
+        </div>
+    </template>
+    <script>
+        //通过对象字面量的形式，定义组件模板
+        var login = {
+                template: '<h1>This is a h1</h1>'
+        }
+        var test = {
+            // template:'<h1>This s comp1 ---{{msg}}</h1>',
+            template:'#temp',
+            data: function(){
+                return {
+                    msg: '这是组件test中的data定义的数据' 
+                }
+            }
+        }
+
+        Vue.component('mylogin', login)
+        //通过Vue.component把组件模板对象，注册为一个全局的Vue组件，同时为了这个组件起了一个名称，可以让我们通过标签的形式，在页面中直接引入这个组件
+        /*定义组件的时候，如果要定义全局的组件Vue.component('组件名称', 组件模板对象)*/
+
+        var vm = new Vue({
+            el: '#app',
+            data: {
+
+            },
+            methods: {
+                
+            },
+            //私有（即局部组件）
+            components:{
+                'mylogin2': login ,
+                login,//简写
+                test, //简写
+            }
+        })
+        /*
+          yao 我个人的理解：
+          组件全局组件和私有组件是一回事儿，只不过在页面加载方式上，全局在页面创建之时就加载，
+          用不用都加载好了，增加了开销，局部组件更加灵活，单独写一个test.vue文件组件作为局部组件引用 
+        */
+    </script>
+</body>
+</html>
